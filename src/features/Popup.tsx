@@ -373,7 +373,7 @@ const WebinarPreview = () => {
               </div>
 
               <div>
-                <label className="block font-medium text-sm text-gray-700">Description</label>
+                <label className="block font-medium text-sm text-gray-700">Template</label>
                 <textarea
                   readOnly
                   rows={3}

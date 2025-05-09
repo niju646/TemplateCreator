@@ -774,7 +774,7 @@ const CustomTemplate: React.FC = () => {
           </div>
           <button
             onClick={() => navigate('/custom-view')}
-            className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50  flex items-center gap-2 shadow-sm hover:scale-105 transition-transform duration-300"
+            className="bg-transparent border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50  flex items-center gap-2 shadow-sm hover:scale-105 transition-transform duration-300"
             type="button"
           >
             <ArrowLeftCircle className="w-5 h-5" />
@@ -943,7 +943,8 @@ const CustomTemplate: React.FC = () => {
                 )}
               </button>
             </div>
-            <Popup/>
+            {/* <Popup/> */}
+            <CustomPopup/>
            
           </form>
         </div>

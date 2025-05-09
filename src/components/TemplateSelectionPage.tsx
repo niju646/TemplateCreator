@@ -71,7 +71,7 @@
 
 
 
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, Edit, ChevronRight, Layout, Star, Clock } from 'lucide-react';
 
@@ -177,7 +177,7 @@ const TemplateSelectionPage = () => {
                       <div className="mr-2 text-purple-500"><Layout size={16} /></div>
                       <span>Advanced layout controls</span>
                     </li>
-                    <li className="flex items-center text-gray-600">
+                    <li className="flex items-center text-gray-600 ">
                       <div className="mr-2 text-purple-500"><Star size={16} /></div>
                       <span>Save your designs for reuse</span>
                     </li>
