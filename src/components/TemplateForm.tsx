@@ -1,205 +1,198 @@
 
 
+"use client"
 
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import RichTextEditor from './RichTextEditor';
-import { ArrowLeftCircle, Save, X, Loader2, } from 'lucide-react';
+import type React from "react"
 
-import Popup from '../features/Popup';
+import { useState, useEffect } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import toast from "react-hot-toast"
+import RichTextEditor from "./RichTextEditor"
+import { ArrowLeftCircle, Save, X, Loader2, AlertCircle } from "lucide-react"
+
+import Popup from "../features/Popup"
 
 interface Template {
-  id: number;
-  name: string;
-  description: string;
-  content: string;
-  createddate: string;
-  updateddate: string;
+  id: number
+  name: string
+  description: string
+  content: string
+  createddate: string
+  updateddate: string
 }
 
 const TemplateForm: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const [template, setTemplate] = useState<Partial<Template>>({
-    name: '',
-    description: '',
-    content: '',
-  });
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [plainContent, setPlainContent] = useState<string>('');
-  
+    name: "",
+    description: "",
+    content: "",
+  })
+  const [loading, setLoading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [plainContent, setPlainContent] = useState<string>("")
 
   useEffect(() => {
     if (id) {
-      fetchTemplate();
+      fetchTemplate()
     }
-  }, [id]);
+  }, [id])
 
   const fetchTemplate = async () => {
     try {
-      setLoading(true);
-      const response = await fetch(`http://localhost:3001/api/templates/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch template');
-      const data = await response.json();
-      setTemplate(data);
-      setPlainContent(data.content?.replace(/<[^>]*>/g, '') || '');
+      setLoading(true)
+      const response = await fetch(`http://localhost:3001/api/templates/${id}`)
+      if (!response.ok) throw new Error("Failed to fetch template")
+      const data = await response.json()
+      setTemplate(data)
+      setPlainContent(data.content?.replace(/<[^>]*>/g, "") || "")
     } catch (err) {
-      setError('Error fetching template');
-      toast.error('Failed to load template');
+      setError("Error fetching template")
+      toast.error("Failed to load template")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const isFormValid = (): boolean => {
-    return Boolean(template.name?.trim() && plainContent?.trim());
-  };
+    return Boolean(template.name?.trim() && plainContent?.trim())
+  }
 
   const handleSubmit = async (e: React.MouseEvent) => {
-    
-    e.preventDefault();
-    
+    e.preventDefault()
+
     if (!isFormValid()) {
-      toast.error('Please fill in all required fields');
-      return;
+      toast.error("Please fill in all required fields")
+      return
     }
-    
+
     try {
-      setSubmitting(true);
-      const method = id ? 'PUT' : 'POST';
-      const url = id
-        ? `http://localhost:3001/api/templates/${id}`
-        : 'http://localhost:3001/api/templates';
+      setSubmitting(true)
+      const method = id ? "PUT" : "POST"
+      const url = id ? `http://localhost:3001/api/templates/${id}` : "http://localhost:3001/api/templates"
 
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: template.name,
           description: template.description,
           content: template.content,
         }),
-      });
+      })
 
-      if (!response.ok) throw new Error('Failed to save template');
-      toast.success(id ? 'Template updated successfully' : 'Template created successfully');
-      navigate('/template-list',{replace:true});
+      if (!response.ok) throw new Error("Failed to save template")
+      toast.success(id ? "Template updated successfully" : "Template created successfully")
+      navigate("/template-list", { replace: true })
     } catch (err) {
-      setError('Error saving template');
-      toast.error('Failed to save template');
+      setError("Error saving template")
+      toast.error("Failed to save template")
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   const handleContentChange = (htmlContent: string, plainTextContent: string) => {
-    setTemplate({ ...template, content: htmlContent });
-    setPlainContent(plainTextContent);
-  };
+    setTemplate({ ...template, content: htmlContent })
+    setPlainContent(plainTextContent)
+  }
 
   if (loading && !template.id) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto" />
+          <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto" />
           <p className="mt-4 text-lg text-gray-700">Loading template data...</p>
         </div>
       </div>
-    );
+    )
   }
 
-
   return (
-    <div className="min-h-screen py-8 bg-gradient-to-br from-gray-100 to-indigo-800">
-
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800">
-              {id ? 'Edit Template' : 'Create Template'}
-            </h1>
-            <p className="text-gray-600 mt-1">
-              {id ? 'Update your existing template' : 'Create a new reusable template'}
-            </p>
+    <div className="min-h-screen bg-gray-50 pb-12">
+      {/* Header with gradient background */}
+      <div className="bg-gradient-to-r from-purple-600 to-violet-500 text-white py-14">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">{id ? "Edit Template" : "Create Template"}</h1>
+              <p className="text-purple-100">
+                {id ? "Update your existing template" : "Create a new reusable template"}
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/template-list", { replace: true })}
+              className="flex items-center bg-white/20 backdrop-blur-sm text-white border border-white/30 px-5 py-3 rounded-lg hover:bg-white/30 transition-colors shadow-md"
+              type="button"
+            >
+              <ArrowLeftCircle className="mr-2 h-5 w-5" />
+              Back to List
+            </button>
           </div>
-          <button
-            onClick={() => navigate('/template-list',{replace:true})}
-            className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50  flex items-center gap-2 shadow-sm hover:scale-105 transition-transform duration-300"
-            type="button"
-          >
-            <ArrowLeftCircle className="w-5 h-5" />
-            Back to List
-          </button>
         </div>
+      </div>
 
+      <div className="container mx-auto px-6 max-w-4xl -mt-8">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center">
+            <AlertCircle className="h-5 w-5 mr-2" />
             {error}
           </div>
         )}
 
-        <div className="bg-white shadow-lg rounded-xl p-8 border border-gray-100">
+        <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
           <form>
-            <div className="space-y-6">
+            <div className="space-y-8">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="name">
+                <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="name">
                   Template Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   id="name"
-                  value={template.name || ''}
+                  value={template.name || ""}
                   onChange={(e) => {
-                    setTemplate({ ...template, name: e.target.value });
+                    setTemplate({ ...template, name: e.target.value })
                   }}
                   placeholder="Enter a descriptive name"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
                   required
                 />
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="description">
+                <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="description">
                   Description
                 </label>
                 <textarea
                   id="description"
-                  value={template.description || ''}
+                  value={template.description || ""}
                   onChange={(e) => setTemplate({ ...template, description: e.target.value })}
                   placeholder="Add a detailed description of this template's purpose"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
                   rows={3}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="content">
                   Template Content <span className="text-red-500">*</span>
                 </label>
-                <div className="border border-gray-300 rounded-lg overflow-hidden">
-                  <RichTextEditor
-                    content={template.content || ''}
-                    onChange={handleContentChange}
-                  />
+                <div className="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                  <RichTextEditor content={template.content || ""} onChange={handleContentChange} />
                 </div>
-                {plainContent.length === 0 && (
-                  <p className="text-sm text-red-500 mt-1">Template content is required</p>
-                )}
+                {plainContent.length === 0 && <p className="text-sm text-red-500 mt-2">Template content is required</p>}
               </div>
             </div>
 
-            <div className="mt-8 flex justify-end gap-3">
+            <div className="mt-10 flex justify-end gap-4">
               <button
-                onClick={() => navigate('/template-list')}
-                className="px-5 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2 font-medium"
+                onClick={() => navigate("/template-list")}
+                className="px-6 py-3 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2 font-medium"
                 type="button"
               >
                 <X className="w-4 h-4" />
@@ -208,39 +201,34 @@ const TemplateForm: React.FC = () => {
               <button
                 onClick={handleSubmit}
                 disabled={!isFormValid() || submitting}
-                className="px-5 py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2 font-medium disabled:bg-blue-300 disabled:cursor-not-allowed shadow-sm"
+                className={`px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-violet-500 text-white hover:opacity-90 transition-colors flex items-center gap-2 font-medium shadow-md ${
+                  !isFormValid() || submitting ? "opacity-70 cursor-not-allowed" : ""
+                }`}
                 type="submit"
               >
                 {submitting ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                     Saving...
                   </>
                 ) : (
                   <>
-                    <Save className="w-4 h-4" />
+                    <Save className="w-5 h-5" />
                     Save Template
                   </>
                 )}
               </button>
             </div>
 
-
-{/* popup */}
-             < Popup />
-            
-
-            
+            {/* popup */}
+            <Popup />
           </form>
         </div>
-       
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TemplateForm;
-
-
+export default TemplateForm
 
 
