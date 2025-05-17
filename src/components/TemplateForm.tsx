@@ -88,7 +88,7 @@ const TemplateForm: React.FC = () => {
 
       if (!response.ok) throw new Error('Failed to save template');
       toast.success(id ? 'Template updated successfully' : 'Template created successfully');
-      navigate('/template-list');
+      navigate('/template-list',{replace:true});
     } catch (err) {
       setError('Error saving template');
       toast.error('Failed to save template');
@@ -128,7 +128,7 @@ const TemplateForm: React.FC = () => {
             </p>
           </div>
           <button
-            onClick={() => navigate('/template-list')}
+            onClick={() => navigate('/template-list',{replace:true})}
             className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50  flex items-center gap-2 shadow-sm hover:scale-105 transition-transform duration-300"
             type="button"
           >

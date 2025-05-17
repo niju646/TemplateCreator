@@ -2,7 +2,7 @@
 
 
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import {  useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import RichTextEditor from './RichTextEditor';
 import { 
@@ -148,7 +148,8 @@ const CustomTemplate: React.FC = () => {
       });
       setPlainContent('');
       setSelectedTemplateId(null);
-      navigate('/custom-view');
+      navigate('/custom-view',{replace:true});
+
     } catch (err: any) {
       setError(err.message || 'Error saving custom template');
       toast.error(err.message || 'Failed to save custom template');
@@ -209,7 +210,7 @@ const CustomTemplate: React.FC = () => {
             </p>
           </div>
           <button
-            onClick={() => navigate('/custom-view')}
+            onClick={() => navigate('/custom-view', {replace:true})}
             className="bg-transparent border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50  flex items-center gap-2 shadow-sm hover:scale-105 transition-transform duration-300"
             type="button"
           >
