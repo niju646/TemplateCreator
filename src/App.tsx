@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import TemplateSelectionPage from './components/TemplateSelectionPage';
 import CustomTemplate from './components/CustomTemplate';
 import CustomTemplatesList from './components/CustomTemplateList';
-
+import EmailSetting from './components/EmailSetting';
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
       <Route path='/edit/:id' element={<TemplateForm/>}/>
       <Route path='/custom-template' element={<CustomTemplate/>}/>
       <Route path='/custom-view' element={<CustomTemplatesList/>}/>
+      <Route path='/email-setting' element={<EmailSetting/>}/>
      </Routes>
     </div>
   );

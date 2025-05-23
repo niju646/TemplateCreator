@@ -50,6 +50,7 @@ const CustomTemplate: React.FC = () => {
   const [templates, setTemplates] = useState<Template[]>([])
   const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(null)
   const [loadingTemplates, setLoadingTemplates] = useState(false)
+  const [image, setImage]= useState(null);
   const username = "testuser" // Hardcoded for testing; replace with authenticated username
 
   useEffect(() => {
@@ -120,6 +121,7 @@ const CustomTemplate: React.FC = () => {
           content: customTemplate.content,
           category: customTemplate.category,
           isPublic: customTemplate.isPublic,
+          image: image,
           username,
         }),
       })
@@ -314,7 +316,7 @@ const CustomTemplate: React.FC = () => {
               </div>
 
               <div className="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
-                <RichTextEditor content={customTemplate.content || ""} onChange={handleContentChange} />
+                <RichTextEditor setImage={setImage} content={customTemplate.content || ""} onChange={handleContentChange} />
               </div>
               {plainContent.length === 0 && <p className="text-sm text-red-500 mt-2">Template content is required</p>}
             </div>
